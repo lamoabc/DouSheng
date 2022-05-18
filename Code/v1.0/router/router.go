@@ -12,5 +12,5 @@ func Router(r *gin.Engine) {
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
-	apiRouter.GET("/user/login", service.Login)
+	apiRouter.POST("/user/login", service.Login)
 }
