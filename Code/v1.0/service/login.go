@@ -56,7 +56,4 @@ func Login(c *gin.Context) {
 		})
 	}
 
-	// insert token to user
-	database.DB.Model(&user).Where("username = ? ", username).Update("token", token)
-
 }
