@@ -11,7 +11,7 @@ import (
 func main() {
 	// 配置 MySQL 连接参数
 	username := "root"        //账号
-	password := "939791250wQ" //密码
+	password := "" //密码
 	host := "127.0.0.1"       //数据库地址，可以是Ip或者域名
 	port := 3307              //数据库端口
 	Dbname := "douyin"        //数据库名
