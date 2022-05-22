@@ -10,6 +10,6 @@
 
 抖声APP,服务端配置以及功能说明
 
-## [代码](https://gitee.com/set-sail0/DouSheng/tree/develop/Code)
+## [代码](https://gitee.com/set-sail0/DouSheng#https://gitee.com/set-sail0/DouSheng/tree/develop/Code)
 
 抖声App,不同版本服务端代码

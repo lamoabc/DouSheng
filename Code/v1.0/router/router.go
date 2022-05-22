@@ -13,4 +13,7 @@ func Router(r *gin.Engine) {
 
 	// basic apis
 	apiRouter.POST("/user/login/", service.Login)
+
+	//// extend apis I
+	//apiRouter.POST("/favorite/action/")
 }
