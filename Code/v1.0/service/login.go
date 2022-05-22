@@ -5,55 +5,59 @@ import (
 	"Code/v1.0/models"
 	"Code/v1.0/tools"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 )
-
-type UserLoginResponse struct {
-}
 
 func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
 	// Judge whether the username and password are empty
-
 	if username == "" || password == "" {
-		c.JSON(http.StatusOK, models.User{
-			StatusCode: -1,
-			StatusMsg:  "Required information is NULL",
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": -1,
+			"status_msg":  "Required information is NULL",
 		})
 		return
 	}
 
-	data := new(models.User)
+	// Judge whether the username and password is it false
+	data := new(models.User_table)
+	err := database.DB.Where("username = ? AND password = ? ", username, password).First(&data).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusOK, gin.H{
+				"status_code": -1,
+				"status_msg":  "username or password is false",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": -1,
+			"status_msg":  "Get User_table Error:" + err.Error(),
+		})
+		return
+	}
+
 	// use tool class generate token
-	token, err := tools.GenerateToken(data.Id, data.Name)
+	token, err := tools.GenerateToken(data.User_id, username, password)
 
 	if err != nil {
-		c.JSON(http.StatusOK, models.User{
-			StatusCode: -1,
-			StatusMsg:  "GenerateToken Error:" + err.Error(),
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": -1,
+			"status_msg":  "GenerateToken Error:" + err.Error(),
 		})
 		return
 	}
-
-	user := models.User{}
-	exist := database.DB.Model(&user).Where("username = ? and password = ?", username, password)
-	var userid int64
-	database.DB.Model(&user).Where("username", username).Find("use_id", userid)
-
-	if exist != nil {
-		c.JSON(http.StatusOK, models.User{
-			StatusCode: 0,
-			StatusMsg:  "login success",
-			UserId:     userid,
-			Token:      token,
-		})
-	} else {
-		c.JSON(http.StatusOK, models.User{
-			StatusCode: 1,
-			StatusMsg:  "User doesn't exist",
-		})
-	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": map[string]interface{}{
+			"status_code": 0,
+			"status_msg":  "login success",
+			"user_id":     data.User_id,
+			"token":       token,
+		},
+	})
 
 }
