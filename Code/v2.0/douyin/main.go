@@ -10,11 +10,11 @@ import (
 
 func main() {
 	// 配置 MySQL 连接参数
-	username := "root"        //账号
-	password := "" //密码
-	host := "127.0.0.1"       //数据库地址，可以是Ip或者域名
-	port := 3307              //数据库端口
-	Dbname := "douyin"        //数据库名
+	username := "root"   //账号
+	password := "382527" //密码
+	host := "127.0.0.1"  //数据库地址，可以是Ip或者域名
+	port := 3306         //数据库端口
+	Dbname := "douyin"   //数据库名
 
 	// 通过前面的数据库参数，拼接 Mysql DSN，其实就是数据库连接串（数据源名称）
 	// Mysql dsn格式： {username}:{password}@tcp({host}:{port})/{Dbname}?charset=utf8&parseTime=True&loc=Local

@@ -1,9 +1,9 @@
-use dousheng;
+use douyin;
 create table User_table  -- 用户表
 (
 user_id bigint not null auto_increment primary key, -- 用户i
-password varchar(32) not null,  -- 账号密码
-username varchar(32) not null unique, -- 用户昵称
+account_password varchar(32) not null,  -- 账号密码
+user_name varchar(32) not null unique, -- 用户昵称
 follow_count int default 0, -- 关注总数
 follower_count int default 0 -- 粉丝总数
 );

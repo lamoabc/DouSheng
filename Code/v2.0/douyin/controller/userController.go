@@ -17,7 +17,7 @@ func Login(c *gin.Context) {
 	password := c.Query("password")
 	//声明此次请求需要返回的response
 	var response response.Login
-	// Judge whether the username and password are
+	// Judge whether the username and password are empty
 	if username == "" || password == "" {
 		//request里的信息为空,无需调用登录服务,直接装填response
 		response.StatusCode = -1
