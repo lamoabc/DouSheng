@@ -8,6 +8,7 @@ type Video struct {
 	FavoriteCount int64  `json:"favorite_count,omitempty"`
 	CommentCount  int64  `json:"comment_count,omitempty"`
 	IsFavorite    bool   `json:"is_favorite,omitempty"`
+	VideoTitle    string `json:"title"`
 }
 type VideoTable struct {
 	VideoId    int64  `gorm:"column:video_id"`
