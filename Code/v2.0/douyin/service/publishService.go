@@ -7,17 +7,18 @@ import (
 	"douyin/tools"
 )
 
+// PublishList all users have same publish video list
 func PublishList(token string, userId string, response *response.PublishList) {
 	// 查询该作者的所有video
 	var videoList []*module.VideoTable
-	if err := dataImp.QueryVideoByUserId(userId, videoList); err != nil {
+	if err := dataImp.QueryVideoByUserId(userId, &videoList); err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
 		return
 	}
 
 	// 查询作者信息
-	var author *module.UserTable
+	author := new(module.UserTable)
 	if err := dataImp.QueryAuthorByUserId(userId, author); err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
@@ -33,8 +34,8 @@ func PublishList(token string, userId string, response *response.PublishList) {
 		return
 	}
 	// 在根据用户id和作者id查询是否关注
-	var Follow *module.FollowTable
-	isFollow, err := dataImp.IsFollow(userClaims.UserId, userId, Follow)
+	var follow *module.FollowTable
+	isFollow, err := dataImp.IsFollow(userClaims.UserId, userId, follow)
 	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
@@ -51,17 +52,17 @@ func PublishList(token string, userId string, response *response.PublishList) {
 	}
 
 	// 该作者和其所有的 video 成功查询后，填装response
-	videoListResp := make([]module.Video, len(videoList))
-	var authorResp module.User
+	authorResp := new(module.User)
 	authorResp.Id = author.UserId
 	authorResp.Name = author.Username
 	authorResp.FollowCount = author.FollowCount
 	authorResp.FollowerCount = author.FollowerCount
 	authorResp.IsFollow = isFollow
 
+	videoListResp := make([]module.Video, len(videoList))
 	for i := 0; i < len(videoList); i++ {
 		videoListResp[i].Id = videoList[i].VideoId
-		videoListResp[i].Author = authorResp
+		videoListResp[i].Author = *authorResp
 		videoListResp[i].PlayUrl = videoList[i].PlayUrl
 		videoListResp[i].CoverUrl = videoList[i].CoverUrl
 		videoListResp[i].FavoriteCount = videoList[i].FavCount
