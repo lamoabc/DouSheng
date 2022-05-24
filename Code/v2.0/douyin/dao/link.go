@@ -10,12 +10,12 @@ import (
 var Db = Connect()
 
 func Connect() *gorm.DB {
-	username := "root"  // username
-	password := ""      // password
-	host := "127.0.0.1" // database address
-	port := 3306        // database port
-	Dbname := "douyin"  // database name
-	timeout := "10s"    // timeout
+	username := "root"                                      // username
+	password := "As382527"                                  // password
+	host := "rm-2zeyw64s6z5xm7x2eto.mysql.rds.aliyuncs.com" // database address
+	port := 3306                                            // database port
+	Dbname := "douyin"                                      // database name
+	timeout := "10s"                                        // timeout
 
 	// 通过前面的数据库参数，拼接 Mysql DSN，其实就是数据库连接串（数据源名称）
 	// Mysql dsn格式： {username}:{password}@tcp({host}:{port})/{Dbname}?charset=utf8&parseTime=True&loc=Local
