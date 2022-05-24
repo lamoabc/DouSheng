@@ -9,6 +9,20 @@ import (
 
 func Register(c *gin.Context) {
 
+	var response response.Register
+	//获取request中的信息
+	username := c.Query("username")
+	password := c.Query("password")
+	if username == "" || password == "" {
+		//request里的信息为空,无需调用登录服务,直接装填response
+		response.StatusCode = -1
+		response.StatusMsg = "Required information is NULL"
+		c.JSON(http.StatusOK, response)
+		return
+	} else {
+		service.Register(username, password, &response)
+		c.JSON(http.StatusOK, response)
+	}
 }
 
 func Login(c *gin.Context) {
