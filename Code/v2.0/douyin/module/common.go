@@ -12,3 +12,20 @@ type FavTable struct {
 	FavUserId  int64 `gorm:"column:fav_user_id"`
 	FavVideoId int64 `gorm:"column:fav_video_id"`
 }
+
+type VideoWithAuthor struct {
+	VideoTable
+	UserTable
+}
+
+func (u VideoWithAuthor) TableName() string {
+	return "video_with_author"
+}
+func (u FollowTable) TableName() string {
+	// 绑定 Mysql 表名
+	return "user_follow"
+}
+func (u FavTable) TableName() string {
+	// 绑定 Mysql 表名
+	return "user_favourite"
+}
