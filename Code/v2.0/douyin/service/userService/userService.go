@@ -2,6 +2,7 @@ package userService
 
 import (
 	"douyin/dao/dataImp/registerImp"
+    "douyin/dao/favouriteImp"
 	"douyin/dao/feedImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
@@ -109,4 +110,37 @@ func Feed(latestTime int64, token string, response *response.Feed) {
 	response.StatusMsg = "successful"
 	response.NextTime = data[len(data)-1].UploadDate
 	response.List = VideoList
+}
+func UserFav(userId int64, videoId int64, actionType int64, response *response.Favourite) {
+	//根据actionType进行点赞服务或者取消点赞服务
+	if actionType == 1 {
+		//点赞
+		//将点赞记录同步更新到数据库
+		mes := favouriteImp.Insert(userId, videoId)
+		if mes != "" {
+			response.StatusCode = -1
+			response.StatusMsg = mes
+			return
+		}
+		response.StatusCode = 0
+		response.StatusMsg = "点赞成功"
+		return
+	}
+	if actionType == 2 {
+		//取消点赞
+		//将点赞记录从数据库里同步删除
+		mes := favouriteImp.Delete(userId, videoId)
+		if mes != "" {
+			response.StatusCode = -1
+			response.StatusMsg = mes
+			return
+		}
+		response.StatusCode = 0
+		response.StatusMsg = "取消点赞成功"
+		return
+	}
+	//actionType意外的值错误
+	response.StatusCode = -1
+	response.StatusMsg = "ActionType value is invalid"
+	return
 }
