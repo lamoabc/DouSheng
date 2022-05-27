@@ -2,6 +2,7 @@ package tools
 
 import (
 	"fmt"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"mime/multipart"
 	"os"
 )
@@ -19,10 +20,16 @@ func GetPlayUrl(filename string, content multipart.File) string {
 }
 
 func GetCoverUrl(filename string) string {
-	//bucket := OssUpload()
-	//objectName := "Video address/" + filename
-	//targetBucketName := "yygh-lamo"
-	//style := "?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast,ar_auto"
+	bucket := OssUpload()
+	style := "video/snapshot,t_50000,f_jpg,w_800,h_600"
+	// 指定视频路径
+	ossVideoName := "Video address/" + filename
+	// 生成带签名的URL，并指定过期时间为600s。
+	signedURL, err := bucket.SignURL(ossVideoName, oss.HTTPGet, 60000000, oss.Process(style))
+	if err != nil {
+		fmt.Println("Error:", err)
+		os.Exit(-1)
+	}
 
-	return "https://yygh-lamo.oss-cn-beijing.aliyuncs.com/"
+	return signedURL
 }
