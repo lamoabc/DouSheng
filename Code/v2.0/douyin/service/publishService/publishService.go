@@ -40,18 +40,9 @@ func PublishAction(data *multipart.FileHeader, token string, title string, respo
 }
 
 // PublishList all users have same publish video list
-func PublishList(token string, userId string, response *response.PublishList) {
-	// 查询该作者的所有video
-	var videoList []*module.VideoTable
-	if err := publishImp.QueryVideoByUserId(userId, &videoList); err != nil {
-		response.StatusCode = -1
-		response.StatusMsg = err.Error()
-		return
-	}
-
-	// 查询作者信息
-	author := new(module.UserTable)
-	if err := publishImp.QueryAuthorByUserId(userId, author); err != nil {
+func PublishList(token string, userId int64, response *response.PublishList) {
+	var videoList []module.VideoWithAuthor
+	if err := publishImp.QueryVideoListByUserId(userId, &videoList); err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
 		return
@@ -59,42 +50,41 @@ func PublishList(token string, userId string, response *response.PublishList) {
 
 	// 查询用户是否关注了此作者
 	// 先把token里面的userId解析出来，不同于作者的userId
-	userClaims, err := tools.AnalyseToken(token)
-	if err != nil {
-		response.StatusCode = -1
-		response.StatusMsg = err.Error()
-		return
-	}
-	// 在根据用户id和作者id查询是否关注
-	var follow *module.FollowTable
-	isFollow, err := publishImp.IsFollow(userClaims.UserId, userId, follow)
-	if err != nil {
-		response.StatusCode = -1
-		response.StatusMsg = err.Error()
-		return
-	}
+	isFollowList := make([]bool, len(videoList))
+	isFavList := make([]bool, len(videoList))
+	if token != "" {
+		userClaims, err := tools.AnalyseToken(token)
+		if err != nil {
+			response.StatusCode = -1
+			response.StatusMsg = err.Error()
+			return
+		}
+		// 在根据用户id和videoList中的作者id查询是否关注
+		isFollowList, err = publishImp.IsFollow(userClaims.UserId, videoList)
+		if err != nil {
+			response.StatusCode = -1
+			response.StatusMsg = err.Error()
+			return
+		}
 
-	// 查询该用户是否给video点赞
-	var fav []*module.FavTable
-	isFavList, err := publishImp.IsFavorite(userClaims.UserId, videoList, fav)
-	if err != nil {
-		response.StatusCode = -1
-		response.StatusMsg = err.Error()
-		return
+		// 查询该用户是否给video点赞
+		isFavList, err = publishImp.IsFavorite(userClaims.UserId, videoList)
+		if err != nil {
+			response.StatusCode = -1
+			response.StatusMsg = err.Error()
+			return
+		}
 	}
 
 	// 该作者和其所有的 video 成功查询后，填装response
-	authorResp := new(module.User)
-	authorResp.Id = author.UserId
-	authorResp.Name = author.Username
-	authorResp.FollowCount = author.FollowCount
-	authorResp.FollowerCount = author.FollowerCount
-	authorResp.IsFollow = isFollow
-
 	videoListResp := make([]module.Video, len(videoList))
 	for i := 0; i < len(videoList); i++ {
 		videoListResp[i].Id = videoList[i].VideoId
-		videoListResp[i].Author = *authorResp
+		videoListResp[i].Author.Id = videoList[i].AuthorId
+		videoListResp[i].Author.Name = videoList[i].Username
+		videoListResp[i].Author.FollowCount = videoList[i].FollowCount
+		videoListResp[i].Author.FollowerCount = videoList[i].FollowerCount
+		videoListResp[i].Author.IsFollow = isFollowList[i]
 		videoListResp[i].PlayUrl = videoList[i].PlayUrl
 		videoListResp[i].CoverUrl = videoList[i].CoverUrl
 		videoListResp[i].FavoriteCount = videoList[i].FavCount
@@ -104,7 +94,7 @@ func PublishList(token string, userId string, response *response.PublishList) {
 	}
 
 	response.StatusCode = 0
-	response.StatusMsg = "success"
+	response.StatusMsg = "successful"
 	response.VideoList = videoListResp
 	return
 }

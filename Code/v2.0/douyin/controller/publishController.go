@@ -6,6 +6,7 @@ import (
 	"douyin/service/publishService"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type VideoListResponse struct {
@@ -33,7 +34,8 @@ func Publish(c *gin.Context) {
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
 	token := c.Query("token")
-	userId := c.Query("user_id")
+	id := c.Query("user_id")
+	userId, _ := strconv.ParseInt(id, 10, 64)
 	var response response.PublishList
 	publishService.PublishList(token, userId, &response)
 	c.JSON(http.StatusOK, response)
