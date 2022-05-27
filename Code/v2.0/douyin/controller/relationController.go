@@ -28,5 +28,10 @@ func FollowList(c *gin.Context) {
 }
 
 func FollowerList(c *gin.Context) {
-
+	token := c.Query("token")
+	id := c.Query("user_id")
+	userId, _ := strconv.ParseInt(id, 10, 64)
+	var response response.FollowList
+	relationService.FollowerList(token, userId, &response)
+	c.JSON(http.StatusOK, response)
 }
