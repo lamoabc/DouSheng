@@ -1,11 +1,11 @@
-package service
+package publishService
 
 import (
-	"douyin/dao/dataImp"
+	"douyin/dao/dataImp/publishImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
-    "mime/multipart"
+	"mime/multipart"
 )
 
 func PublishAction(data *multipart.FileHeader, token string, title string, response *response.PublishAction) {
@@ -17,7 +17,7 @@ func PublishAction(data *multipart.FileHeader, token string, title string, respo
 		return
 	}
 	usertale := new(module.UserTable)
-	exist := dataImp.QueryUserId(tmp.UserId, usertale)
+	exist := publishImp.QueryUserId(tmp.UserId, usertale)
 	if exist != nil {
 		response.StatusCode = -1
 		response.StatusMsg = " no is it exist"
@@ -27,7 +27,7 @@ func PublishAction(data *multipart.FileHeader, token string, title string, respo
 
 	play_url := tools.GetPlayUrl(data.Filename, fileContent)
 	cover_url := tools.GetCoverUrl(data.Filename)
-	err = dataImp.InsertData(tmp.UserId, play_url, cover_url, title)
+	err = publishImp.InsertData(tmp.UserId, play_url, cover_url, title)
 	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
@@ -43,7 +43,7 @@ func PublishAction(data *multipart.FileHeader, token string, title string, respo
 func PublishList(token string, userId string, response *response.PublishList) {
 	// 查询该作者的所有video
 	var videoList []*module.VideoTable
-	if err := dataImp.QueryVideoByUserId(userId, &videoList); err != nil {
+	if err := publishImp.QueryVideoByUserId(userId, &videoList); err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
 		return
@@ -51,7 +51,7 @@ func PublishList(token string, userId string, response *response.PublishList) {
 
 	// 查询作者信息
 	author := new(module.UserTable)
-	if err := dataImp.QueryAuthorByUserId(userId, author); err != nil {
+	if err := publishImp.QueryAuthorByUserId(userId, author); err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
 		return
@@ -67,7 +67,7 @@ func PublishList(token string, userId string, response *response.PublishList) {
 	}
 	// 在根据用户id和作者id查询是否关注
 	var follow *module.FollowTable
-	isFollow, err := dataImp.IsFollow(userClaims.UserId, userId, follow)
+	isFollow, err := publishImp.IsFollow(userClaims.UserId, userId, follow)
 	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
@@ -76,7 +76,7 @@ func PublishList(token string, userId string, response *response.PublishList) {
 
 	// 查询该用户是否给video点赞
 	var fav []*module.FavTable
-	isFavList, err := dataImp.IsFavorite(userClaims.UserId, videoList, fav)
+	isFavList, err := publishImp.IsFavorite(userClaims.UserId, videoList, fav)
 	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()

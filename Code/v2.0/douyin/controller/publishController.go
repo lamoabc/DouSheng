@@ -3,7 +3,7 @@ package controller
 import (
 	"douyin/module"
 	"douyin/module/jsonModule/response"
-	"douyin/service"
+	"douyin/service/publishService"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -15,7 +15,7 @@ type VideoListResponse struct {
 
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
-    data, err := c.FormFile("data")
+	data, err := c.FormFile("data")
 	if err != nil {
 		c.JSON(http.StatusOK, module.Response{
 			StatusCode: 1,
@@ -26,7 +26,7 @@ func Publish(c *gin.Context) {
 	token := c.PostForm("token")
 	title := c.PostForm("title")
 	var response response.PublishAction
-	service.PublishAction(data, token, title, &response)
+	publishService.PublishAction(data, token, title, &response)
 	c.JSON(http.StatusOK, response)
 }
 
@@ -35,6 +35,6 @@ func PublishList(c *gin.Context) {
 	token := c.Query("token")
 	userId := c.Query("user_id")
 	var response response.PublishList
-	service.PublishList(token, userId, &response)
+	publishService.PublishList(token, userId, &response)
 	c.JSON(http.StatusOK, response)
 }

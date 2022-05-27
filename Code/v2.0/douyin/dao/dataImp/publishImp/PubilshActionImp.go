@@ -1,4 +1,4 @@
-package dataImp
+package publishImp
 
 import (
 	"douyin/dao"

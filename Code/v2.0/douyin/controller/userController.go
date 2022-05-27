@@ -2,7 +2,8 @@ package controller
 
 import (
 	"douyin/module/jsonModule/response"
-	"douyin/service"
+	"douyin/service/userService"
+	"douyin/service/visitorService"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -20,7 +21,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	} else {
-		service.Register(username, password, &response)
+		userService.Register(username, password, &response)
 		c.JSON(http.StatusOK, response)
 	}
 }
@@ -39,7 +40,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	} else {
-		service.Login(username, password, &response)
+		visitorService.Login(username, password, &response)
 		c.JSON(http.StatusOK, response)
 	}
 }

@@ -1,21 +1,17 @@
-package service
+package userService
 
 import (
-	"douyin/dao/dataImp"
+	"douyin/dao/dataImp/registerImp"
+	"douyin/dao/feedImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
-    "douyin/dao/feedImp"
 )
-
-func login(u *module.User) {
-
-}
 
 func Register(username string, password string, response *response.Register) {
 	//判断username是否重复
-	err := dataImp.SelectUsername(&username, &password, new(module.UserTable))
-	if err == nil {
+	err := registerImp.SelectUsername(&username, &password, new(module.UserTable))
+	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = "The username already exists"
 		return
@@ -25,7 +21,7 @@ func Register(username string, password string, response *response.Register) {
 		Username: username,
 		Password: password,
 	}
-	err = dataImp.InsertUser(&u)
+	err = registerImp.InsertUser(&u)
 	if err == nil {
 		response.StatusCode = -1
 		response.StatusMsg = "Registration fails"

@@ -1,8 +1,8 @@
-package service
+package visitorService
 
 import (
-	"douyin/dao/dataImp"
-    "douyin/dao/feedImp"
+	"douyin/dao/dataImp/loginImp"
+	"douyin/dao/feedImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
@@ -11,7 +11,7 @@ import (
 func Login(username string, password string, response *response.Login) {
 
 	data := new(module.UserTable)
-	message := dataImp.Login(&username, &password, data)
+	message := loginImp.Login(&username, &password, data)
 	if message != "" {
 		response.StatusCode = -1
 		response.StatusMsg = message

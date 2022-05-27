@@ -1,4 +1,4 @@
-package dataImp
+package registerImp
 
 import (
 	"douyin/dao"
