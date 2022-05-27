@@ -15,6 +15,19 @@ type VideoListResponse struct {
 
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
+    data, err := c.FormFile("data")
+	if err != nil {
+		c.JSON(http.StatusOK, module.Response{
+			StatusCode: 1,
+			StatusMsg:  "File receive error",
+		})
+		return
+	}
+	token := c.PostForm("token")
+	title := c.PostForm("title")
+	var response response.PublishAction
+	service.PublishAction(data, token, title, &response)
+	c.JSON(http.StatusOK, response)
 }
 
 // PublishList all users have same publish video list
