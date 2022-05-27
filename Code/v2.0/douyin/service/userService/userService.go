@@ -3,6 +3,7 @@ package userService
 import (
 	"douyin/dao/dataImp/registerImp"
     "douyin/dao/favouriteImp"
+    "douyin/dao/followImp"
 	"douyin/dao/feedImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
@@ -137,6 +138,39 @@ func UserFav(userId int64, videoId int64, actionType int64, response *response.F
 		}
 		response.StatusCode = 0
 		response.StatusMsg = "取消点赞成功"
+		return
+	}
+	//actionType意外的值错误
+	response.StatusCode = -1
+	response.StatusMsg = "ActionType value is invalid"
+	return
+}
+func UserFol(followId int64, followerId int64, actionType int64, response *response.Follow) {
+	//根据actionType提供关注服务或者取消关注服务
+	if actionType == 1 {
+		//关注
+		//将关注记录同步更新到数据库
+		mes := followImp.Insert(followId, followerId)
+		if mes != "" {
+			response.StatusCode = -1
+			response.StatusMsg = mes
+			return
+		}
+		response.StatusCode = 0
+		response.StatusMsg = "关注成功"
+		return
+	}
+	if actionType == 2 {
+		//取消关注
+		//将关注记录从数据库里同步删除
+		mes := followImp.Delete(followId, followerId)
+		if mes != "" {
+			response.StatusCode = -1
+			response.StatusMsg = mes
+			return
+		}
+		response.StatusCode = 0
+		response.StatusMsg = "取消关注成功"
 		return
 	}
 	//actionType意外的值错误
