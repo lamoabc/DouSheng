@@ -20,7 +20,7 @@ func Feed3(userId int64, videoId int64) (exist bool, message string) {
 	}
 	return false, ""
 }
-func Feed4(userId int64, authorId int64) (exist bool, message string) {
+func Feed4(authorId int64, userId int64) (exist bool, message string) {
 	//根据用户id和作者id查询用户是否关注了该作者
 	temp := module.FollowTable{}
 	err := dao.Db.Where("follow_id=? and follower_id=?", authorId, userId).Take(&temp).Error
