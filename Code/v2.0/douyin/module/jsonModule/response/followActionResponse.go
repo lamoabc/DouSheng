@@ -1,6 +1,7 @@
 package response
+
 import "douyin/module"
 
-type Favourite struct {
+type Follow struct {
 	module.Response
 }
