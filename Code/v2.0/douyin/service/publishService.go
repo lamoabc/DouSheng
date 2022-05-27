@@ -5,7 +5,39 @@ import (
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
+    "mime/multipart"
 )
+
+func PublishAction(data *multipart.FileHeader, token string, title string, response *response.PublishAction) {
+	//根据token解析出来的内容判断内容是否存在
+	tmp, err := tools.AnalyseToken(token)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = "Encryption failed"
+		return
+	}
+	usertale := new(module.UserTable)
+	exist := dataImp.QueryUserId(tmp.UserId, usertale)
+	if exist != nil {
+		response.StatusCode = -1
+		response.StatusMsg = " no is it exist"
+		return
+	}
+	fileContent, _ := data.Open()
+
+	play_url := tools.GetPlayUrl(data.Filename, fileContent)
+	cover_url := tools.GetCoverUrl(data.Filename)
+	err = dataImp.InsertData(tmp.UserId, play_url, cover_url, title)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = err.Error()
+		return
+	}
+	// 成功的返回值
+	response.StatusCode = 0
+	response.StatusMsg = "successful"
+	return
+}
 
 // PublishList all users have same publish video list
 func PublishList(token string, userId string, response *response.PublishList) {
