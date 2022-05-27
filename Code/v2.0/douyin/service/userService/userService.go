@@ -62,7 +62,7 @@ func Feed(latestTime int64, token string, response *response.Feed) {
 	}
 	//data无误拿到
 	//根据userid查用户对data里的视频是否喜欢
-	var isFav []bool
+	var isFav [5]bool
 	for i := 0; i < len(data); i++ {
 		isFav[i], message = feedImp.Feed3(user.UserId, data[i].VideoId)
 		if message != "" {
@@ -76,7 +76,7 @@ func Feed(latestTime int64, token string, response *response.Feed) {
 		return
 	}
 	//根据userid查用户对data里视频的作者是否关注
-	var isFol []bool
+	var isFol [5]bool
 	for i := 0; i < len(data); i++ {
 		isFol[i], message = feedImp.Feed4(data[i].AuthorId, user.UserId)
 		if message != "" {
@@ -107,6 +107,6 @@ func Feed(latestTime int64, token string, response *response.Feed) {
 	}
 	response.StatusCode = 0
 	response.StatusMsg = "successful"
-	response.NextTime = data[4].UploadDate
+	response.NextTime = data[len(data)-1].UploadDate
 	response.List = VideoList
 }
