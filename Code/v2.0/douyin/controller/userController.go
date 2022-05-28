@@ -46,13 +46,18 @@ func Login(c *gin.Context) {
 }
 
 func UserInfo(c *gin.Context) {
+	token := c.Query("token")
+	userId := c.Query("user_id")
 	var response response.UserInfo
-	response.StatusCode = 0
-	response.StatusMsg = "successful"
-	response.Id = 1
-	response.Name = "zhiqieryi"
-	response.FollowCount = 0
-	response.FollowerCount = 0
-	response.IsFollow = true
-	c.JSON(http.StatusOK, response)
+	if token == "" || userId == "" {
+		response.StatusCode = -1
+		response.StatusMsg = "Required information is NULL"
+		c.JSON(http.StatusOK, response)
+		return
+	} else {
+		//进入逻辑层
+		userService.UserInfo(token, userId, &response)
+		c.JSON(http.StatusOK, response)
+	}
+
 }
