@@ -25,7 +25,6 @@ func QueryCommentMsgRes(vedioId int64, userId int64, createDate string, commentT
 
 // Delete comment
 func DeleteCommentImp(commentId int64, CommentTable *module.CommentTable) (err error) {
-
 	err = dao.Db.Where("comment_id", commentId).Delete(&CommentTable).Error
 	return
 }
