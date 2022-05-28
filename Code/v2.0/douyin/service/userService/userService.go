@@ -9,6 +9,7 @@ import (
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
+    "douyin/dao/favListImp"
 )
 
 func Register(username string, password string, response *response.Register) {
