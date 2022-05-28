@@ -33,17 +33,9 @@ func Register(username string, password string, response *response.Register) {
 	response.StatusMsg = "successful"
 	return
 }
-func Feed(latestTime int64, token string, response *response.Feed) {
-	//用户登录状态
-	//解析token拿到用户信息
-	user, err := tools.AnalyseToken(token)
-	if err != nil {
-		response.StatusCode = -1
-		response.StatusMsg = "Token Encryption failed"
-		return
-	}
-	//token无误
-	//声明视频流需要到数据库里拿的module,去数据库拿值
+func Feed(latestTime int64, response *response.Feed) {
+	//游客登录状态
+	//声明Table去数据库拿值,装填进response
 	var data []module.VideoWithAuthor
 	var message string
 	if latestTime > 0 {
@@ -53,61 +45,68 @@ func Feed(latestTime int64, token string, response *response.Feed) {
 		//没有限制时间戳
 		message = feedImp.Feed1(&data)
 	}
-	if message != "" || len(data) < 1 {
+	if message != "" {
+		//有异常,装填response
+		response.StatusCode = -1
+		response.StatusMsg = message
+		return
+	} else {
+		var videoTemp module.Video
+		for i := 0; i < len(data); i++ {
+			videoTemp.Id = data[i].VideoId
+			videoTemp.Author.Id = data[i].UserId
+			videoTemp.Author.Name = data[i].Username
+			videoTemp.Author.IsFollow = false
+			videoTemp.Author.FollowCount = data[i].FollowCount
+			videoTemp.Author.FollowerCount = data[i].FollowerCount
+			videoTemp.CommentCount = data[i].ComCount
+			videoTemp.FavoriteCount = data[i].FavCount
+			videoTemp.CoverUrl = data[i].CoverUrl
+			videoTemp.IsFavorite = false
+			videoTemp.PlayUrl = data[i].PlayUrl
+			videoTemp.VideoTitle = data[i].VideoTitle
+			videoTemp.Author.Signature = data[i].Signature
+			videoTemp.Author.BackGround = data[i].BackGround
+			videoTemp.Author.Avatar = data[i].Avatar
+			response.List = append(response.List, videoTemp)
+		}
+		response.StatusCode = 0
+		response.StatusMsg = "successful"
+	}
+}
+func FavList(userId int64, response *response.FavouriteList) {
+	//游客登录状态
+	//声明点赞列表和数据库对接的module,去数据库拿值
+	var data []module.UserLikeVideoList
+	message := favListImp.GetVideoList(userId, &data)
+	if message != "" {
 		//拿data过程有异常
 		response.StatusCode = -1
 		response.StatusMsg = message
 		return
 	}
-	//data无误拿到
-	//根据userid查用户对data里的视频是否喜欢
-	var isFav [5]bool
+	//data无误拿到,装填response
+	var videoTemp module.Video
 	for i := 0; i < len(data); i++ {
-		isFav[i], message = feedImp.Feed3(user.UserId, data[i].VideoId)
-		if message != "" {
-			break
-		}
-	}
-	if message != "" {
-		//查是否喜欢过程中有异常
-		response.StatusCode = -1
-		response.StatusMsg = message
-		return
-	}
-	//根据userid查用户对data里视频的作者是否关注
-	var isFol [5]bool
-	for i := 0; i < len(data); i++ {
-		isFol[i], message = feedImp.Feed4(data[i].AuthorId, user.UserId)
-		if message != "" {
-			break
-		}
-	}
-	if message != "" {
-		//查是否喜欢过程中有异常
-		response.StatusCode = -1
-		response.StatusMsg = message
-		return
-	}
-	//data,isFav,isFol无误拿到,装填response
-	var VideoList = [5]module.Video{}
-	for i := 0; i < len(data); i++ {
-		VideoList[i].Id = data[i].VideoId
-		VideoList[i].Author.Id = data[i].UserId
-		VideoList[i].Author.Name = data[i].Username
-		VideoList[i].Author.IsFollow = isFol[i]
-		VideoList[i].Author.FollowCount = data[i].FollowCount
-		VideoList[i].Author.FollowerCount = data[i].FollowerCount
-		VideoList[i].CommentCount = data[i].ComCount
-		VideoList[i].FavoriteCount = data[i].FavCount
-		VideoList[i].CoverUrl = data[i].CoverUrl
-		VideoList[i].IsFavorite = isFav[i]
-		VideoList[i].PlayUrl = data[i].PlayUrl
-		VideoList[i].VideoTitle = data[i].VideoTitle
+		videoTemp.Id = data[i].VideoId
+		videoTemp.Author.Id = data[i].UserId
+		videoTemp.Author.Name = data[i].Username
+		videoTemp.Author.IsFollow = false
+		videoTemp.Author.FollowCount = data[i].FollowCount
+		videoTemp.Author.FollowerCount = data[i].FollowerCount
+		videoTemp.CommentCount = data[i].ComCount
+		videoTemp.FavoriteCount = data[i].FavCount
+		videoTemp.CoverUrl = data[i].CoverUrl
+		videoTemp.IsFavorite = false
+		videoTemp.PlayUrl = data[i].PlayUrl
+		videoTemp.VideoTitle = data[i].VideoTitle
+		videoTemp.Author.Signature = data[i].Signature
+		videoTemp.Author.BackGround = data[i].BackGround
+		videoTemp.Author.Avatar = data[i].Avatar
+		response.List = append(response.List, videoTemp)
 	}
 	response.StatusCode = 0
 	response.StatusMsg = "successful"
-	response.NextTime = data[len(data)-1].UploadDate
-	response.List = VideoList
 }
 func UserFav(userId int64, videoId int64, actionType int64, response *response.Favourite) {
 	//根据actionType进行点赞服务或者取消点赞服务
