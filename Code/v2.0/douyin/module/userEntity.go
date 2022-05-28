@@ -1,11 +1,14 @@
 package module
 
 type User struct {
-	Id            int64  `json:"id"`
-	Name          string `json:"name"`
-	FollowCount   int64  `json:"follow_count"`
-	FollowerCount int64  `json:"follower_count"`
-	IsFollow      bool   `json:"is_follow"`
+	Id              int64  `json:"id"`
+	Name            string `json:"name"`
+	FollowCount     int64  `json:"follow_count"`
+	FollowerCount   int64  `json:"follower_count"`
+	IsFollow        bool   `json:"is_follow"`
+	Signature       string `json:"signature"`
+	Avatar          string `json:"avatar"`
+	BackgroundImage string `json:"background_image"`
 }
 type UserTable struct {
 	UserId          int64  `gorm:"column:user_id;primaryKey"`
