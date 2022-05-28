@@ -46,7 +46,7 @@ func IsFollwer(followerId int64, userList []module.UserTable) (isFolList []bool,
 		sort.Ints(followIds)
 		for i := 0; i < len(userList); i++ {
 			//二分查找followIds对应的userList[i].UserId的值是否存在
-			index := twoPoints(followIds, int(userList[i].UserId), len(followIds))
+			index := twoPoints(followIds, int(userList[i].UserId), len(followIds)-1)
 			if index != -1 { //存在
 				isFolList = append(isFolList, true)
 			} else { //不存在
