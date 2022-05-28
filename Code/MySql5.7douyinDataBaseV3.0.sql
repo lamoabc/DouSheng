@@ -503,3 +503,8 @@ as
 select *
 from video v left join user_table ut 
 on v.author_id =ut.user_id;
+create view user_like_videoList
+as
+select *
+from user_favourite uf left join video_with_author vwa
+on uf.fav_video_id =vwa.video_id ;
