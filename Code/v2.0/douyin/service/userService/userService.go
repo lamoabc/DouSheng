@@ -1,7 +1,7 @@
 package userService
 
 import (
-	"douyin/dao/dataImp/registerImp"
+	"douyin/dao"
 	"douyin/dao/favouriteImp"
 	"douyin/dao/feedImp"
 	"douyin/dao/followImp"
@@ -11,13 +11,6 @@ import (
 )
 
 func Register(username string, password string, response *response.Register) {
-	//判断username是否重复
-	err := registerImp.SelectUsername(&username, &password, new(module.UserTable))
-	if err != nil {
-		response.StatusCode = -1
-		response.StatusMsg = "The username already exists"
-		return
-	}
 	//创建用户
 	u := module.UserTable{
 		Username:        username,
@@ -26,12 +19,12 @@ func Register(username string, password string, response *response.Register) {
 		Avatar:          "https://yygh-lamo.oss-cn-beijing.aliyuncs.com/User%20Avatar/3.jpeg",
 		BackgroundImage: "https://yygh-lamo.oss-cn-beijing.aliyuncs.com/User%20background/defaultBackGround.png",
 	}
-	err = registerImp.InsertUser(&u)
-	if err == nil {
+	if err := dao.Db.Create(&u).Error; err != nil {
 		response.StatusCode = -1
-		response.StatusMsg = "Registration fails"
+		response.StatusMsg = "The username already exists"
+		return
 	}
-	token, err := tools.GenerateToken(u.UserId, username, password)
+	token, _ := tools.GenerateToken(u.UserId, username, password)
 
 	response.Token = token
 	response.UserId = u.UserId

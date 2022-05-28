@@ -8,7 +8,7 @@ type User struct {
 	IsFollow      bool   `json:"is_follow"`
 }
 type UserTable struct {
-	UserId          int64  `gorm:"column:user_id"`
+	UserId          int64  `gorm:"column:user_id;primaryKey"`
 	Username        string `gorm:"column:user_name"`
 	Password        string `gorm:"column:account_password"`
 	FollowCount     int64  `gorm:"follow_count"`
