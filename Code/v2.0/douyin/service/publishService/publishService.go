@@ -20,7 +20,7 @@ func PublishAction(data *multipart.FileHeader, token string, title string, respo
 	exist := publishImp.QueryUserId(tmp.UserId, usertale)
 	if exist != nil {
 		response.StatusCode = -1
-		response.StatusMsg = " no is it exist"
+		response.StatusMsg = " user is not login"
 		return
 	}
 	fileContent, _ := data.Open()
