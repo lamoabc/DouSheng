@@ -40,6 +40,9 @@ func FollowList(token string, userId int64, response *response.FollowList) {
 		userListResp[i].FollowCount = userList[i].FollowCount
 		userListResp[i].FollowerCount = userList[i].FollowerCount
 		userListResp[i].IsFollow = isFolList[i]
+		userListResp[i].Signature = userList[i].Signature
+		userListResp[i].Avatar = userList[i].Avatar
+		userListResp[i].BackgroundImage = userList[i].BackgroundImage
 	}
 
 	response.StatusCode = 0

@@ -91,6 +91,9 @@ func PublishList(token string, userId int64, response *response.PublishList) {
 		videoListResp[i].CommentCount = videoList[i].ComCount
 		videoListResp[i].IsFavorite = isFavList[i]
 		videoListResp[i].VideoTitle = videoList[i].VideoTitle
+		videoListResp[i].Author.Signature = videoList[i].Signature
+		videoListResp[i].Author.Avatar = videoList[i].Avatar
+		videoListResp[i].Author.BackgroundImage = videoList[i].BackgroundImage
 	}
 
 	response.StatusCode = 0
