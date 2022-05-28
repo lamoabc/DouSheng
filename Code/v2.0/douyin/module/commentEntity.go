@@ -13,3 +13,7 @@ type CommentTable struct {
 	Content    string `gorm:"column:content"`
 	CreateDate string `gorm:"column:create_date"`
 }
+
+func (u CommentTable) TableName() string {
+	return "comment"
+}
