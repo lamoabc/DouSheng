@@ -2,9 +2,9 @@ package userService
 
 import (
 	"douyin/dao/dataImp/registerImp"
-    "douyin/dao/favouriteImp"
-    "douyin/dao/followImp"
+	"douyin/dao/favouriteImp"
 	"douyin/dao/feedImp"
+	"douyin/dao/followImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
@@ -20,8 +20,11 @@ func Register(username string, password string, response *response.Register) {
 	}
 	//创建用户
 	u := module.UserTable{
-		Username: username,
-		Password: password,
+		Username:        username,
+		Password:        password,
+		Signature:       "欢迎使用抖声APP",
+		Avatar:          "https://yygh-lamo.oss-cn-beijing.aliyuncs.com/User%20Avatar/3.jpeg",
+		BackgroundImage: "https://yygh-lamo.oss-cn-beijing.aliyuncs.com/User%20background/defaultBackGround.png",
 	}
 	err = registerImp.InsertUser(&u)
 	if err == nil {
