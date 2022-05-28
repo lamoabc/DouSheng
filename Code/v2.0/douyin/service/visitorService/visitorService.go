@@ -1,7 +1,10 @@
 package visitorService
 
 import (
+	"douyin/dao"
+	"douyin/dao/dataImp/commentImp"
 	"douyin/dao/dataImp/loginImp"
+	"douyin/dao/favListImp"
 	"douyin/dao/feedImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
@@ -50,25 +53,91 @@ func Feed(latestTime int64, response *response.Feed) {
 		response.StatusMsg = message
 		return
 	} else {
-		var VideoList = [5]module.Video{}
-		for i := 0; i < 5; i++ {
-			VideoList[i].Id = data[i].VideoId
-			VideoList[i].Author.Id = data[i].UserId
-			VideoList[i].Author.Name = data[i].Username
-			VideoList[i].Author.IsFollow = false
-			VideoList[i].Author.FollowCount = data[i].FollowCount
-			VideoList[i].Author.FollowerCount = data[i].FollowerCount
-			VideoList[i].CommentCount = data[i].ComCount
-			VideoList[i].FavoriteCount = data[i].FavCount
-			VideoList[i].CoverUrl = data[i].CoverUrl
-			VideoList[i].IsFavorite = false
-			VideoList[i].PlayUrl = data[i].PlayUrl
-			VideoList[i].VideoTitle = data[i].VideoTitle
+		var videoTemp module.Video
+		for i := 0; i < len(data); i++ {
+			videoTemp.Id = data[i].VideoId
+			videoTemp.Author.Id = data[i].UserId
+			videoTemp.Author.Name = data[i].Username
+			videoTemp.Author.IsFollow = false
+			videoTemp.Author.FollowCount = data[i].FollowCount
+			videoTemp.Author.FollowerCount = data[i].FollowerCount
+			videoTemp.CommentCount = data[i].ComCount
+			videoTemp.FavoriteCount = data[i].FavCount
+			videoTemp.CoverUrl = data[i].CoverUrl
+			videoTemp.IsFavorite = false
+			videoTemp.PlayUrl = data[i].PlayUrl
+			videoTemp.VideoTitle = data[i].VideoTitle
+			videoTemp.Author.Signature = data[i].Signature
+			videoTemp.Author.BackgroundImage = data[i].BackgroundImage
+			videoTemp.Author.Avatar = data[i].Avatar
+			response.List = append(response.List, videoTemp)
 		}
 		response.StatusCode = 0
 		response.StatusMsg = "successful"
-		response.NextTime = data[4].UploadDate
-		response.List = VideoList
+	}
+}
+func FavList(userId int64, response *response.FavouriteList) {
+	//游客登录状态
+	//声明点赞列表和数据库对接的module,去数据库拿值
+	var data []module.UserLikeVideoList
+	message := favListImp.GetVideoList(userId, &data)
+	if message != "" {
+		//拿data过程有异常
+		response.StatusCode = -1
+		response.StatusMsg = message
 		return
 	}
+	//data无误拿到,装填response
+	var videoTemp module.Video
+	for i := 0; i < len(data); i++ {
+		videoTemp.Id = data[i].VideoId
+		videoTemp.Author.Id = data[i].UserId
+		videoTemp.Author.Name = data[i].Username
+		videoTemp.Author.IsFollow = false
+		videoTemp.Author.FollowCount = data[i].FollowCount
+		videoTemp.Author.FollowerCount = data[i].FollowerCount
+		videoTemp.CommentCount = data[i].ComCount
+		videoTemp.FavoriteCount = data[i].FavCount
+		videoTemp.CoverUrl = data[i].CoverUrl
+		videoTemp.IsFavorite = false
+		videoTemp.PlayUrl = data[i].PlayUrl
+		videoTemp.VideoTitle = data[i].VideoTitle
+		videoTemp.Author.Signature = data[i].Signature
+		videoTemp.Author.BackgroundImage = data[i].BackgroundImage
+		videoTemp.Author.Avatar = data[i].Avatar
+		response.List = append(response.List, videoTemp)
+	}
+	response.StatusCode = 0
+	response.StatusMsg = "successful"
+}
+func ComList(videoId int64, response *response.CommentList) {
+	var data []module.CommentTable
+	err := commentImp.GetCommentList(videoId, &data)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = err.Error()
+		return
+	}
+	//装填response
+	var commentTemp module.Comment
+	for i := 0; i < len(data); i++ {
+		commentTemp.Id = data[i].CommentId
+		commentTemp.Content = data[i].Content
+		commentTemp.CreateDate = data[i].CreateDate
+		//查询评论对应的用户
+		var user module.UserTable
+		userId := data[i].ComUserId
+		if err := dao.Db.Where("user_id = ?", userId).Find(&user).Error; err != nil {
+			response.StatusCode = -1
+			response.StatusMsg = "The username already exists"
+			return
+		}
+		commentTemp.User.Id = user.UserId
+		commentTemp.User.Name = user.Username
+		commentTemp.User.FollowCount = user.FollowCount
+		commentTemp.User.FollowerCount = user.FollowerCount
+		response.List = append(response.List, commentTemp)
+	}
+	response.StatusCode = 0
+	response.StatusMsg = "successful"
 }

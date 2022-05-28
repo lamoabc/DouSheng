@@ -17,7 +17,14 @@ type VideoWithAuthor struct {
 	VideoTable
 	UserTable
 }
-
+type UserLikeVideoList struct {
+	FavTable
+	VideoWithAuthor
+}
+func (u UserLikeVideoList) TableName() string {
+	// 绑定 Mysql 表名
+	return "user_like_videoList"
+}
 func (u VideoWithAuthor) TableName() string {
 	return "video_with_author"
 }

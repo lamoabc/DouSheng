@@ -4,6 +4,7 @@ import (
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/service/commentService"
+	"douyin/service/visitorService"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -44,5 +45,25 @@ func CommentAction(c *gin.Context) {
 }
 
 func CommentList(c *gin.Context) {
-
+	token := c.Query("token")
+	id := c.Query("video_id")
+	videoId, err := strconv.ParseInt(id, 10, 64)
+	var response response.CommentList
+	if err != nil && id != "" {
+		response.StatusCode = -1
+		response.StatusMsg = "userId Decoding failure"
+		c.JSON(http.StatusOK, response)
+		return
+	}
+	if token == "" {
+		//游客身份
+		//调用游客Feed流服务装填response
+		visitorService.ComList(videoId, &response)
+		c.JSON(http.StatusOK, response)
+	} else {
+		//用户身份
+		//调用用户Feed流服务装填response
+		commentService.ComList(videoId, &response)
+		c.JSON(http.StatusOK, response)
+	}
 }

@@ -1,6 +1,7 @@
 package commentService
 
 import (
+	"douyin/dao"
 	"douyin/dao/dataImp/commentImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
@@ -77,5 +78,36 @@ func DeleteComment(token string, commentId int64, response *response.CommentActi
 		response.StatusMsg = exist.Error()
 		return
 	}
+}
 
+func ComList(videoId int64, response *response.CommentList) {
+	var data []module.CommentTable
+	err := commentImp.GetCommentList(videoId, &data)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = err.Error()
+		return
+	}
+	//装填response
+	var commentTemp module.Comment
+	for i := 0; i < len(data); i++ {
+		commentTemp.Id = data[i].CommentId
+		commentTemp.Content = data[i].Content
+		commentTemp.CreateDate = data[i].CreateDate
+		//查询评论对应的用户
+		var user module.UserTable
+		userId := data[i].ComUserId
+		if err := dao.Db.Where("user_id = ?", userId).Find(&user).Error; err != nil {
+			response.StatusCode = -1
+			response.StatusMsg = "The username already exists"
+			return
+		}
+		commentTemp.User.Id = user.UserId
+		commentTemp.User.Name = user.Username
+		commentTemp.User.FollowCount = user.FollowCount
+		commentTemp.User.FollowerCount = user.FollowerCount
+		response.List = append(response.List, commentTemp)
+	}
+	response.StatusCode = 0
+	response.StatusMsg = "successful"
 }
