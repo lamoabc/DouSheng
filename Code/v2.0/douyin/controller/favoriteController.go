@@ -3,6 +3,7 @@ package controller
 import (
 	"douyin/module/jsonModule/response"
 	"douyin/service/userService"
+    "douyin/service/visitorService"
 	"douyin/tools"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -69,5 +70,25 @@ c.JSON(http.StatusOK, response)
 }
 
 func FavoriteList(c *gin.Context) {
-
+	token := c.Query("token")
+	id := c.Query("user_id")
+	userId, err := strconv.ParseInt(id, 10, 64)
+	var response response.FavouriteList
+	if err != nil && id != "" {
+		response.StatusCode = -1
+		response.StatusMsg = "userId Decoding failure"
+		c.JSON(http.StatusOK, response)
+		return
+	}
+	if token == "" {
+		//游客身份
+		//调用游客Feed流服务装填response
+		visitorService.FavList(userId, &response)
+		c.JSON(http.StatusOK, response)
+	} else {
+		//用户身份
+		//调用用户Feed流服务装填response
+		userService.FavList(userId, token, &response)
+		c.JSON(http.StatusOK, response)
+	}
 }
