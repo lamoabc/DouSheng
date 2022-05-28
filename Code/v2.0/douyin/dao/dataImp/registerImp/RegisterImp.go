@@ -5,7 +5,7 @@ import (
 	"douyin/module"
 )
 
-func SelectUsername(username *string, password *string, data *module.UserTable) (err error) {
+func SelectUsername(username *string, data *module.UserTable) (err error) {
 	err = dao.Db.Where("user_name = ?", username).Find(&data).Error
 	return
 }
