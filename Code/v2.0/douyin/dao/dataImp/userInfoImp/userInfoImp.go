@@ -7,7 +7,7 @@ import (
 )
 
 func SelectAuthorByUserId(userId string, author *module.UserTable) (err error) {
-	err = dao.Db.Where("user_id = ?", userId).Find(&author).Error
+	err = dao.Db.Debug().Where("user_id = ?", userId).Find(&author).Error
 	return
 }
 
