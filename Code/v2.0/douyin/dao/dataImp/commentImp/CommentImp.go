@@ -28,3 +28,9 @@ func DeleteCommentImp(commentId int64, CommentTable *module.CommentTable) (err e
 	err = dao.Db.Where("comment_id", commentId).Delete(&CommentTable).Error
 	return
 }
+
+// Query commentList
+func GetCommentList(videoId int64, data *[]module.CommentTable) (err error) {
+	err = dao.Db.Where("com_video_id = ?", videoId).Order("create_date desc").Find(&data).Error
+	return
+}

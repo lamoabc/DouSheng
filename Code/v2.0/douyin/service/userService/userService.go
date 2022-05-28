@@ -3,14 +3,13 @@ package userService
 import (
 	"douyin/dao"
 	"douyin/dao/dataImp/userInfoImp"
+	"douyin/dao/favListImp"
 	"douyin/dao/favouriteImp"
 	"douyin/dao/feedImp"
 	"douyin/dao/followImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
-    "douyin/dao/favListImp"
-    "mime/multipart"
 )
 
 func Register(username string, password string, response *response.Register) {
@@ -68,7 +67,7 @@ func Feed(latestTime int64, response *response.Feed) {
 			videoTemp.PlayUrl = data[i].PlayUrl
 			videoTemp.VideoTitle = data[i].VideoTitle
 			videoTemp.Author.Signature = data[i].Signature
-			videoTemp.Author.BackGround = data[i].BackGround
+			videoTemp.Author.BackgroundImage = data[i].BackgroundImage
 			videoTemp.Author.Avatar = data[i].Avatar
 			response.List = append(response.List, videoTemp)
 		}
@@ -103,7 +102,7 @@ func FavList(userId int64, response *response.FavouriteList) {
 		videoTemp.PlayUrl = data[i].PlayUrl
 		videoTemp.VideoTitle = data[i].VideoTitle
 		videoTemp.Author.Signature = data[i].Signature
-		videoTemp.Author.BackGround = data[i].BackGround
+		videoTemp.Author.BackgroundImage = data[i].BackgroundImage
 		videoTemp.Author.Avatar = data[i].Avatar
 		response.List = append(response.List, videoTemp)
 	}

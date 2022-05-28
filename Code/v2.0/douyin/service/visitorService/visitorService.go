@@ -1,12 +1,14 @@
 package visitorService
 
 import (
+	"douyin/dao"
+	"douyin/dao/dataImp/commentImp"
 	"douyin/dao/dataImp/loginImp"
+	"douyin/dao/favListImp"
 	"douyin/dao/feedImp"
 	"douyin/module"
 	"douyin/module/jsonModule/response"
 	"douyin/tools"
-    "douyin/dao/favListImp"
 )
 
 func Login(username string, password string, response *response.Login) {
@@ -66,7 +68,7 @@ func Feed(latestTime int64, response *response.Feed) {
 			videoTemp.PlayUrl = data[i].PlayUrl
 			videoTemp.VideoTitle = data[i].VideoTitle
 			videoTemp.Author.Signature = data[i].Signature
-			videoTemp.Author.BackGround = data[i].BackGround
+			videoTemp.Author.BackgroundImage = data[i].BackgroundImage
 			videoTemp.Author.Avatar = data[i].Avatar
 			response.List = append(response.List, videoTemp)
 		}
@@ -101,9 +103,40 @@ func FavList(userId int64, response *response.FavouriteList) {
 		videoTemp.PlayUrl = data[i].PlayUrl
 		videoTemp.VideoTitle = data[i].VideoTitle
 		videoTemp.Author.Signature = data[i].Signature
-		videoTemp.Author.BackGround = data[i].BackGround
+		videoTemp.Author.BackgroundImage = data[i].BackgroundImage
 		videoTemp.Author.Avatar = data[i].Avatar
 		response.List = append(response.List, videoTemp)
+	}
+	response.StatusCode = 0
+	response.StatusMsg = "successful"
+}
+func ComList(videoId int64, response *response.CommentList) {
+	var data []module.CommentTable
+	err := commentImp.GetCommentList(videoId, &data)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = err.Error()
+		return
+	}
+	//装填response
+	var commentTemp module.Comment
+	for i := 0; i < len(data); i++ {
+		commentTemp.Id = data[i].CommentId
+		commentTemp.Content = data[i].Content
+		commentTemp.CreateDate = data[i].CreateDate
+		//查询评论对应的用户
+		var user module.UserTable
+		userId := data[i].ComUserId
+		if err := dao.Db.Where("user_id = ?", userId).Find(&user).Error; err != nil {
+			response.StatusCode = -1
+			response.StatusMsg = "The username already exists"
+			return
+		}
+		commentTemp.User.Id = user.UserId
+		commentTemp.User.Name = user.Username
+		commentTemp.User.FollowCount = user.FollowCount
+		commentTemp.User.FollowerCount = user.FollowerCount
+		response.List = append(response.List, commentTemp)
 	}
 	response.StatusCode = 0
 	response.StatusMsg = "successful"

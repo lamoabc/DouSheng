@@ -26,7 +26,7 @@ func Feed(c *gin.Context) {
 	} else {
 		//用户身份
 		//调用用户Feed流服务装填response
-		userService.Feed(latestTime, token, &response)
+		userService.Feed(latestTime, &response)
 		c.JSON(http.StatusOK, response)
 	}
 }
