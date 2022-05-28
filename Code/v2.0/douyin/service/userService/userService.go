@@ -2,6 +2,7 @@ package userService
 
 import (
 	"douyin/dao"
+	"douyin/dao/dataImp/userInfoImp"
 	"douyin/dao/favouriteImp"
 	"douyin/dao/feedImp"
 	"douyin/dao/followImp"
@@ -172,5 +173,38 @@ func UserFol(followId int64, followerId int64, actionType int64, response *respo
 	//actionType意外的值错误
 	response.StatusCode = -1
 	response.StatusMsg = "ActionType value is invalid"
+	return
+}
+
+func UserInfo(token string, userId string, response *response.UserInfo) {
+	//查询用户信息
+	// 先把token里面的userId解析出来，不同于作者的userId
+	userClaims, err := tools.AnalyseToken(token)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = err.Error()
+		return
+	}
+	// 在根据用户id和要查询的userid查询是否关注（也就是用户id是否关注了要查询的userid）
+	var follow *module.FollowTable
+	isFollow, _ := userInfoImp.IsFollow(userClaims.UserId, userId, follow)
+
+	userTable := new(module.UserTable)
+	err = userInfoImp.SelectAuthorByUserId(userId, userTable)
+	if err != nil {
+		response.StatusCode = -1
+		response.StatusMsg = "The user information for the user id does not exist"
+		return
+	}
+	response.StatusCode = 0
+	response.Id = userTable.UserId
+	response.Name = userTable.Username
+	response.IsFollow = isFollow
+	response.FollowCount = userTable.FollowCount
+	response.FollowerCount = userTable.FollowerCount
+	response.Signature = userTable.Signature
+	response.BackgroundImage = userTable.BackgroundImage
+	response.Avatar = userTable.Avatar
+	response.StatusMsg = "successful"
 	return
 }
