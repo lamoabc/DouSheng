@@ -10,7 +10,7 @@ func initRouter(r *gin.Engine) {
 	// public directory is used to serve static resources
 	r.Static("/static", "./public")
 	r.StaticFS("/public", http.Dir("public"))
-	//r.StaticFile("/favicon.ico", "./static/favicon.ico")
+	r.StaticFile("/favicon.ico", "./static/favicon.ico")
 
 	apiRouter := r.Group("/douyin")
 
@@ -23,7 +23,7 @@ func initRouter(r *gin.Engine) {
 	apiRouter.GET("/publish/list/", controller.PublishList)
 
 	// extra apis - I
-	//apiRouter.POST("/favorite/action/", controller.FavoriteAction)
+	apiRouter.POST("/favorite/action/", controller.FavouriteAction)
 	apiRouter.GET("/favorite/list/", controller.FavoriteList)
 	apiRouter.POST("/comment/action/", controller.CommentAction)
 	apiRouter.GET("/comment/list/", controller.CommentList)
