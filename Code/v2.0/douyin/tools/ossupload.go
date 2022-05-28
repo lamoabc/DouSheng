@@ -25,7 +25,7 @@ func GetCoverUrl(filename string) string {
 	// 指定视频路径
 	ossVideoName := "Video address/" + filename
 	// 生成带签名的URL，并指定过期时间为600s。
-	signedURL, err := bucket.SignURL(ossVideoName, oss.HTTPGet, 60000000, oss.Process(style))
+	signedURL, err := bucket.SignURL(ossVideoName, oss.HTTPGet, 2592000, oss.Process(style))
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(-1)
