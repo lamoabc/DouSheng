@@ -68,7 +68,6 @@ func FavouriteAction(c *gin.Context) {
 	userService.UserFav(user.UserId, videoId, actionType, &response)
 	c.JSON(http.StatusOK, response)
 }
-
 func FavoriteList(c *gin.Context) {
 	token := c.Query("token")
 	id := c.Query("user_id")
@@ -88,7 +87,7 @@ func FavoriteList(c *gin.Context) {
 	} else {
 		//用户身份
 		//调用用户Feed流服务装填response
-		userService.FavList(userId, &response)
+		userService.FavList(userId, token, &response)
 		c.JSON(http.StatusOK, response)
 	}
 }
