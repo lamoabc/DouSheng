@@ -24,7 +24,7 @@ func AddComment(token string, videoId int64, commentText string, response *respo
 		response.StatusMsg = " user is not login"
 		return
 	}
-	createtime := time.Now().String()
+	createtime := time.Now().Format("2006-01-02")
 
 	// insert CommentMsg
 	//err = commentImp.InsertCommentMsg(videoId, userId, commentText, time)
