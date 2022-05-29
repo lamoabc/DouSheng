@@ -12,7 +12,10 @@ func Feed3(userId int64, videoId int64) (exist bool, message string) {
 	temp.FavVideoId = 10
 	temp.FavUserId = 10
 	err := dao.Db.Where("fav_user_id=? and fav_video_id=?", userId, videoId).Take(&temp).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, ""
+		}
 		return false, "select exception"
 	}
 	if temp.FavUserId == userId && temp.FavVideoId == videoId {
@@ -24,7 +27,10 @@ func Feed4(authorId int64, userId int64) (exist bool, message string) {
 	//根据用户id和作者id查询用户是否关注了该作者
 	temp := module.FollowTable{}
 	err := dao.Db.Where("follow_id=? and follower_id=?", authorId, userId).Take(&temp).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, ""
+		}
 		return false, "select exception"
 	}
 	if temp.FollowId == authorId && temp.FollowerId == userId {

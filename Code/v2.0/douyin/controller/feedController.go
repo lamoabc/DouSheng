@@ -10,7 +10,6 @@ import (
 )
 
 func Feed(c *gin.Context) {
-
 	token := c.Query("token")
 	Time := c.Query("latest_time")
 	latestTime, err := strconv.ParseInt(Time, 10, 64)
@@ -26,7 +25,7 @@ func Feed(c *gin.Context) {
 	} else {
 		//用户身份
 		//调用用户Feed流服务装填response
-		userService.Feed(latestTime, &response)
+		userService.Feed(latestTime, token, &response)
 		c.JSON(http.StatusOK, response)
 	}
 }
