@@ -113,7 +113,7 @@ func Feed(latestTime int64, token string, response *response.Feed) {
 		videoTemp.PlayUrl = data[i].PlayUrl
 		videoTemp.VideoTitle = data[i].VideoTitle
 		videoTemp.Author.Signature = data[i].Signature
-		videoTemp.Author.BackGround = data[i].BackGround
+		videoTemp.Author.BackgroundImage = data[i].BackgroundImage
 		videoTemp.Author.Avatar = data[i].Avatar
 		response.List = append(response.List, videoTemp)
 	}
@@ -191,7 +191,7 @@ func FavList(userId int64, token string, response *response.FavouriteList) {
 		videoTemp.PlayUrl = data[i].PlayUrl
 		videoTemp.VideoTitle = data[i].VideoTitle
 		videoTemp.Author.Signature = data[i].Signature
-		videoTemp.Author.BackGround = data[i].BackGround
+		videoTemp.Author.BackgroundImage = data[i].BackgroundImage
 		videoTemp.Author.Avatar = data[i].Avatar
 		response.List = append(response.List, videoTemp)
 	}
