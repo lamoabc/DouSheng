@@ -16,8 +16,8 @@ func OssUpload() *oss.Bucket {
 	// Endpoint以杭州为例，其它Region请按实际情况填写。
 	endpoint := "http://oss-cn-beijing.aliyuncs.com"
 	// 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
-	accessKeyId := "LTAI5tCGyWdd7pJqoGiwU6yn"
-	accessKeySecret := "uCE5Yx2LCtvWPU4dNWN5TXfaW8LgYe"
+	accessKeyId := ""
+	accessKeySecret := ""
 	bucketName := "yygh-lamo"
 	// 创建OSSClient实例。
 	client, err := oss.New(endpoint, accessKeyId, accessKeySecret)
