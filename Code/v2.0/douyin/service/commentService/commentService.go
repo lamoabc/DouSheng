@@ -106,6 +106,7 @@ func ComList(videoId int64, response *response.CommentList) {
 		commentTemp.User.Name = user.Username
 		commentTemp.User.FollowCount = user.FollowCount
 		commentTemp.User.FollowerCount = user.FollowerCount
+        commentTemp.User.Avatar = user.Avatar
 		response.List = append(response.List, commentTemp)
 	}
 	response.StatusCode = 0
