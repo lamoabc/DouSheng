@@ -35,7 +35,7 @@ go get -u github.com/dgrijalva/jwt-go
 
 ### 目前实现接口
 
-[接口功能详细说明](https://gitee.com/set-sail0/DouSheng/blob/master/Doc/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%8D%89%E7%A8%BF.md)
+[接口功能详细说明](https://gitee.com/set-sail0/DouSheng/blob/master/Doc/%E6%8E%A5%E5%8F%A3%E5%8A%9F%E8%83%BD%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E.md)
 
 #### 基础接口
 
