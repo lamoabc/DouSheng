@@ -66,4 +66,4 @@ go get -u github.com/dgrijalva/jwt-go
 
 
 
-**[项目不同版本介绍]()**
+**[项目不同版本介绍](https://gitee.com/set-sail0/DouSheng/blob/master/Doc/%E9%A1%B9%E7%9B%AE%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E4%BB%8B%E7%BB%8D.md)**
