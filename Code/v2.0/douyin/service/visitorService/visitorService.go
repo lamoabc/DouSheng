@@ -14,6 +14,7 @@ import (
 func Login(username string, password string, response *response.Login) {
 
 	data := new(module.UserTable)
+	password = tools.GetMd5(password)
 	message := loginImp.Login(&username, &password, data)
 	if message != "" {
 		response.StatusCode = -1
