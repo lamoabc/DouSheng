@@ -6,11 +6,11 @@
 ## 介绍
 字节跳动青训营项目
 
-## [文档说明](https://gitee.com/set-sail0/DouSheng/tree/develop/Doc)
+## [文档说明](https://github.com/jhy625/DouSheng/tree/master/Doc)
 
 抖声APP,服务端配置以及功能说明
 
-## [代码](https://gitee.com/set-sail0/DouSheng/tree/master/Code)
+## [代码](https://github.com/jhy625/DouSheng/tree/master/Code)
 
 抖声App,不同版本服务端代码
 
@@ -43,7 +43,7 @@ go get -u github.com/dgrijalva/jwt-go
 
 ### 目前实现接口
 
-[接口功能详细说明](https://gitee.com/set-sail0/DouSheng/blob/master/Doc/%E6%8E%A5%E5%8F%A3%E5%8A%9F%E8%83%BD%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E.md)
+[接口功能详细说明](https://github.com/jhy625/DouSheng/blob/master/Doc/%E6%8E%A5%E5%8F%A3%E5%8A%9F%E8%83%BD%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E.md)
 
 #### 基础接口
 
@@ -66,4 +66,4 @@ go get -u github.com/dgrijalva/jwt-go
 
 
 
-**[项目不同版本介绍](https://gitee.com/set-sail0/DouSheng/blob/master/Doc/%E9%A1%B9%E7%9B%AE%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E4%BB%8B%E7%BB%8D.md)**
+**[项目不同版本介绍](https://github.com/jhy625/DouSheng/blob/master/Doc/%E9%A1%B9%E7%9B%AE%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E4%BB%8B%E7%BB%8D.md)**
